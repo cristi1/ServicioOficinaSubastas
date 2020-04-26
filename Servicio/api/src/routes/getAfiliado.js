@@ -6,8 +6,8 @@ var dataBaseHandler = new DataBaseHandler()
 router.get('/Afi', (req, res) => res.json({ message: 'Hola Cristi desde afiliado.js' }))
 
 router.get('/Afiliado', (req, res) => {
-  let codigo = req.body.codigo
-  let password = req.body.password
+  let codigo = req.query.codigo
+  let password = req.query.password
   let nombre
   let membresia = false
   let con = dataBaseHandler.createConnection()
