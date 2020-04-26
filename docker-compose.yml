@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+  server:
+    networks:
+     - backend
+    build: ./Servicio
+    container_name: nodejs_osb
+    ports:
+     - "8080:8080"
+    depends_on:
+     - db
+    environment:
+     - DATABASE_HOST=db
+    volumes:
+     - ./Servicio/api:/app/api
+    
+  db:
+    build: ./BD
+    container_name: mysql_osb
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+     - "3307:3306"
+    volumes:
+     - ./BD:/docker-entrypoint-initdb.d/
+     - ./BD/config/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+     - ./BD/backup/backup.sh:/backup.sh
+    restart: always
+    networks:
+     - backend
+
+networks:
+   backend:
+    driver: bridge
+
