@@ -33,6 +33,7 @@ router.get('/Afiliado', (req, res) => {
           con2.query('CALL sp_obtenerEstadoMembresia(?)', [codigo], function (error2, result2) {
              if (error2) { res.status(404).send("Ocurrio un error durante la consulta2: " + error2)}
             membresia = result2[0][0].estadoMembresia
+            membresia = (membresia == 'true')
             res.status(200).send({
               status: 'OK',
               message: 'La autenticacion es exitosa.',
