@@ -24,16 +24,13 @@ create table usuario(
 drop table if exists membresia;
 create table membresia(
 	id int not null auto_increment,
-    afiliado int,
-    monto float,
+    afiliado varchar(20),
+    monto float null,
     fecha datetime null,
-    tipoPago int,
-    documento varchar(30),
-    empleado int,
-    estado int,	-- 1 activo 2 vencido
-    constraint id primary key (id),
-    foreign key (afiliado) references usuario(id),
-    foreign key (empleado) references usuario(id)
+    tipoPago int null,
+    documento varchar(30) null,
+    estado int null,	-- 1 activo 2 vencido
+    constraint id primary key (id)
 );
 
 -- Insert de roles
@@ -49,8 +46,8 @@ insert into usuario (rol,codigo,password,nombre,apellido,dpi,direccion,telefono,
 values (2,'emp01','12345','Juan','Perez','285212500555','Zona 6 Guatemala','33215000','juanperez@hotmail.com');
 
 -- insert membresia
-insert into membresia (afiliado,monto,fecha,tipoPago,documento,empleado,estado)
-values (1,100,'2019-04-22 00:00:00',1,'55201645',2,1);
+insert into membresia (afiliado,monto,fecha,tipoPago,documento,estado)
+values ("afi01",100,'2019-04-22 00:00:00',1,'55201645',1);
 
 -- procedimientos almacenados insertar usuario
 DROP PROCEDURE IF EXISTS sp_insertarUsuario;
@@ -117,17 +114,17 @@ in pCodigo varchar(20)
 )
 BEGIN
 declare fechaMembresia datetime;
-declare estadoMembresia varchar(8);
-declare idAfiliado int;
-select id into idAfiliado from usuario where codigo = pCodigo;
-select fecha into fechaMembresia from membresia where afiliado = idAfiliado and estado = 1;
+declare estadoMembresia varchar(20);
+-- declare idAfiliado int;
+-- select id into idAfiliado from usuario where codigo = pCodigo;
+select fecha into fechaMembresia from membresia where afiliado = pCodigo and estado = 1;
 select if (fechaMembresia is null, '2000-01-01 00:00:00', fechaMembresia) into fechaMembresia;
 select if (TIMESTAMPDIFF(DAY, fechaMembresia, now()) < 365 , 'true', 'false') into estadoMembresia;
 select estadoMembresia;
 END //
 DELIMITER ;
 -- llamada de prueba
--- CALL sp_obtenerEstadoMembresia('afi03');
+-- CALL sp_obtenerEstadoMembresia('afi01');
 
 -- procedimiento almacenado actualiza password
 DROP PROCEDURE IF EXISTS sp_actualizarPassword;
@@ -168,4 +165,41 @@ DELIMITER ;
 -- llamada de prueba
 -- CALL sp_obtenerRoles();
 
+-- procedimiento almacenado insertar membresia
+DROP PROCEDURE IF EXISTS sp_insertarMembresia;
+DELIMITER //
+CREATE PROCEDURE sp_insertarMembresia(
+in pAfiliado varchar(20),
+in pMonto float,
+in pTipoPago int,
+in pDocumento varchar(30)
+)
+BEGIN
+declare idRegistro int;
+select id into idRegistro from membresia where afiliado = pAfiliado and estado = 1;
+if (idRegistro is null) then
+	insert into membresia (afiliado,monto,fecha,tipoPago,documento,estado) 
+    values (pAfiliado,pMonto,now(),pTipoPago,pDocumento,1);
+else
+	update membresia set estado = 0 where id = idRegistro;
+    insert into membresia (afiliado,monto,fecha,tipoPago,documento,estado) 
+    values (pAfiliado,pMonto,now(),pTipoPago,pDocumento,1);
+end if;
+select id,monto,fecha from membresia where afiliado = pAfiliado and estado = 1;
+END //
+DELIMITER ;
+-- llamada de prueba
+-- CALL sp_insertarMembresia('afi01',100,1,'doc00011');
 
+-- procedimiento almacenado obtener membresia
+DROP PROCEDURE IF EXISTS sp_obtenerMembresia;
+DELIMITER //
+CREATE PROCEDURE sp_obtenerMembresia(
+in pAfiliado varchar(20)
+)
+BEGIN
+select id,monto,fecha from membresia where afiliado = pAfiliado and estado = 1;
+END //
+DELIMITER ;
+-- llamada de prueba
+-- CALL sp_obtenerMembresia('afi01');
