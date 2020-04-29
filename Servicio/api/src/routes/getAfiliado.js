@@ -19,7 +19,7 @@ router.get('/Afiliado', (req, res) => {
         message: 'El codigo de afiliado no existe.'
       })
     } else { // existe afiliado
-      nombre = result[0][0].nombre + ' ' + result[0][0].apellido
+      nombre = result[0][0].nombre 
       let con1 = dataBaseHandler.createConnection()
       con1.query('CALL sp_obtenerUsuario(1,?,?)', [codigo, password], function (error1, result1) {
         if (error1) { res.status(404).send("Ocurrio un error durante la consulta1: " + error1)}
