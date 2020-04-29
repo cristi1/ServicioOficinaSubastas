@@ -53,6 +53,7 @@ function updatePassword (res, codigo, nombre, password) {
             if (error3) { res.status(404).send("Ocurrio un error durante la consulta4: " + error3)}
 
             membresia = result2[0][0].estadoMembresia
+            membresia = (membresia == 'true')
             res.status(201).send({
               status: 'Created',
               message: 'Usuario actualizado exitosamente.',
