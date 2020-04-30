@@ -27,4 +27,4 @@ jobs:
       - run:
           name: Deploy app to GCP via docker
           command: |
-            ssh -o StrictHostKeyChecking=no ubuntu@107.21.160.103 "/bin/bash ./deploy_app.sh $DOCKER_LOGIN/$IMAGE_NAME:$TAG"
+            ssh -o StrictHostKeyChecking=no cv.crisj@107.21.160.103 "/bin/bash ./deploy_app.sh $DOCKER_LOGIN/$IMAGE_NAME:$TAG"
