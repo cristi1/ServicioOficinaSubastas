@@ -1,0 +1,30 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - 31:71:e4:2d:a4:ca:06:68:43:40:04:ff:7b:47:7a:bd
+            - 81:2d:b6:5b:12:78:e0:05:e1:5e:c0:a0:b6:d7:2b:db
+      - run:
+          name: Setup VirtualEnv and Build
+          command: |
+            echo 'export TAG=0.1.${CIRCLE_BUILD_NUM}' >> $BASH_ENV
+            echo 'export IMAGE_NAME=oficina_subasta' >> $BASH_ENV
+            npm install
+            npm build
+      - setup_remote_docker:
+          docker_layer_caching: false
+      - run:
+          name: Build and push Docker image
+          command: |
+            docker build -t $DOCKER_LOGIN/$IMAGE_NAME:$TAG .
+            echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
+            docker push $DOCKER_LOGIN/$IMAGE_NAME:$TAG
+      - run:
+          name: Deploy app to GCP via docker
+          command: |
+            ssh -o StrictHostKeyChecking=no ubuntu@107.21.160.103 "/bin/bash ./deploy_app.sh $DOCKER_LOGIN/$IMAGE_NAME:$TAG"
