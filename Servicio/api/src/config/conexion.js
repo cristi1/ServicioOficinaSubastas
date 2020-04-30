@@ -10,7 +10,8 @@ DataBaseHandler.prototype.createConnection = function () {
         host: 'db' || '172.18.0.2',
         user: 'admin',
         password: 'Admin123***',
-        database: 'oficinaSubasta'
+        database: 'oficinaSubasta',
+        port: 3307
     });
 
     this.connection.connect();
