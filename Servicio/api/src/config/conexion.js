@@ -7,7 +7,7 @@ function DataBaseHandler() {
 DataBaseHandler.prototype.createConnection = function () {
 
     this.connection = mysql.createConnection({
-        host: 'db',
+        host: 'db' || '172.18.0.2',
         user: 'admin',
         password: 'Admin123***',
         database: 'oficinaSubasta'
