@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const router = Router()
-var DataBaseHandler =  require('../config/conexion')
+var DataBaseHandler = require('../config/conexion')
 var dataBaseHandler = new DataBaseHandler()
 
 router.put('/Afiliado', function (req, res) {
@@ -28,9 +28,9 @@ function updatePassword (res, codigo, nombre, password) {
       message: 'El password no cumple las características mínimas de seguridad.'
     })
   } else {
-    let con = dataBaseHandler.createConnection()
+    const con = dataBaseHandler.createConnection()
     con.query('CALL sp_existeUsuario(?);', [codigo], function (error, result) {
-      if (error) { res.status(404).send("Ocurrio un error durante la consulta1: " + error)}
+      if (error) { res.status(404).send('Ocurrio un error durante la consulta1: ' + error) }
 
       if (result[0][0] == null) { // no existe afiliado
         res.status(404).send({
@@ -39,18 +39,18 @@ function updatePassword (res, codigo, nombre, password) {
         })
       } else {
         if (nombre != null) {
-          let con1 = dataBaseHandler.createConnection()
+          const con1 = dataBaseHandler.createConnection()
           con1.query('CALL sp_actualizarNombre(?,?);', [codigo, nombre], function (error1, result1) {
-            if (error1) { res.status(404).send("Ocurrio un error durante la consulta2: " + error1)}
+            if (error1) { res.status(404).send('Ocurrio un error durante la consulta2: ' + error1) }
           })
           con1.end()
         }
-        let con2 = dataBaseHandler.createConnection()
+        const con2 = dataBaseHandler.createConnection()
         con2.query('CALL sp_actualizarPassword(?,?);', [codigo, password], function (error2, result1) {
-          if (error2) { res.status(404).send("Ocurrio un error durante la consulta3: " + error2)}
-          let con3 = dataBaseHandler.createConnection()
+          if (error2) { res.status(404).send('Ocurrio un error durante la consulta3: ' + error2) }
+          const con3 = dataBaseHandler.createConnection()
           con3.query('CALL sp_obtenerEstadoMembresia(?);', [codigo], function (error3, result2) {
-            if (error3) { res.status(404).send("Ocurrio un error durante la consulta4: " + error3)}
+            if (error3) { res.status(404).send('Ocurrio un error durante la consulta4: ' + error3) }
 
             membresia = result2[0][0].estadoMembresia
             membresia = (membresia == 'true')
