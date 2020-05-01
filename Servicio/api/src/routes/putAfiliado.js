@@ -14,10 +14,10 @@ router.put('/Afiliado', function (req, res) {
   const password = req.body.password
   const jwt = req.body.jwt
 
-  if ((jwt == null && codigo == null) || (password == null && nombre == null)) {
+  if ((jwt == null && codigo == null) || (password == null && nombre == null) || !Number.isInteger(codigo)) {
     res.status(406).send({
       status: 'Not Acceptable',
-      message: 'Es necesario un parametro opcional.'
+      message: 'Datos requeridos no ingresados o son incorrectos.'
     })
   } else {
     try {

@@ -17,10 +17,10 @@ router.get('/Afiliado', (req, res) => {
   let nombre
   let membresia = false
 
-  if (jwt == null || codigo == null || password == null) {
+  if (jwt == null || codigo == null || password == null || !Number.isInteger(codigo)) {
     res.status(401).send({
       status: 'Unauthorized',
-      message: 'La autenticación no es exitosa, hacen falta datos requeridos.'
+      message: 'La autenticación no es exitosa, hacen falta datos requeridos o son incorrectos.'
     })
   } else {
     try {

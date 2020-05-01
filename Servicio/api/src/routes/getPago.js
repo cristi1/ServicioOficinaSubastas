@@ -12,10 +12,10 @@ router.get('/Pago', (req, res) => {
   const jwt = req.query.jwt
   const codigo = req.query.codigo
 
-  if (codigo == null) {
+  if (codigo == null || !Number.isInteger(codigo)) {
     res.status(406).send({
       status: 'Not Acceptable',
-      message: 'Datos requeridos no ingresados.'
+      message: 'Datos requeridos no ingresados o son incorrectos.'
     })
   } else {
     try {

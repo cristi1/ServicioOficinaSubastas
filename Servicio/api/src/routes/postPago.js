@@ -14,10 +14,10 @@ router.post('/Pago', function (req, res) {
   const jwt = req.body.jwt
   let membresia
 
-  if (codigo == null || monto == null) {
+  if (codigo == null || monto == null || !Number.isInteger(codigo)) {
     res.status(406).send({
       status: 'Not Acceptable',
-      message: 'Datos requeridos no ingresados.'
+      message: 'Datos requeridos no ingresados o son incorrectos.'
     })
   } else if (monto < 0 || monto != 100) {
     res.status(406).send({
