@@ -1,21 +1,40 @@
 const { Router } = require('express')
 const router = Router()
+require('dotenv').config()
+var nJwt = require('njwt')
 var DataBaseHandler = require('../config/conexion')
+var validarScope = require('../config/validarScope')
 var dataBaseHandler = new DataBaseHandler()
+
+var signingKey = process.env.KEY_JWT
 
 router.put('/Afiliado', function (req, res) {
   const codigo = req.body.codigo
   const nombre = req.body.nombre
   const password = req.body.password
+  const jwt = req.body.jwt
 
-  if (password == null && nombre == null) {
+  if ((jwt == null && codigo == null) || (password == null && nombre == null)) {
     res.status(406).send({
       status: 'Not Acceptable',
-      message: 'Se esperaba un nuevo password.'
+      message: 'Es necesario un parametro opcional.'
     })
   } else {
-    if (password != null) {
-      updatePassword(res, codigo, nombre, password)
+    try {
+      verifiedJwt = nJwt.verify(jwt, signingKey)
+      if (!validarScope.validarScope(verifiedJwt, 'afiliado.put')) {
+        res.status(403).send({
+          status: 'Forbidden',
+          message: 'El JWT no es válido o no contiene el scope de este servicio'
+        })
+      } else {
+        updatePassword(res, codigo, nombre, password)
+      }
+    } catch (error) {
+      res.status(403).send({
+        status: 'Forbidden',
+        message: 'El JWT no es válido o no contiene el scope de este servicio'
+      })
     }
   }
 })
@@ -53,7 +72,7 @@ function updatePassword (res, codigo, nombre, password) {
             if (error3) { res.status(404).send('Ocurrio un error durante la consulta4: ' + error3) }
 
             membresia = result2[0][0].estadoMembresia
-            membresia = (membresia == 'true')
+            membresia = (membresia === 'true')
             res.status(201).send({
               status: 'Created',
               message: 'Usuario actualizado exitosamente.',
