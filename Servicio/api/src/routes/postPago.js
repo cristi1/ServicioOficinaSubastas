@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const router = Router()
-var DataBaseHandler =  require('../config/conexion')
+var DataBaseHandler = require('../config/conexion')
 var dataBaseHandler = new DataBaseHandler()
 
 router.post('/Pago', function (req, res) {
@@ -20,7 +20,7 @@ router.post('/Pago', function (req, res) {
       message: 'El monto no es el requerido por el sistema.'
     })
   } else {
-    let con = dataBaseHandler.createConnection()
+    const con = dataBaseHandler.createConnection()
     con.query('CALL sp_existeUsuario(?);', [codigo], function (error, result) {
       if (error) { res.status(404).send('Ocurrio un error durante la consulta1: ' + error) }
       if (result[0][0] == null) { // no existe afiliado
@@ -29,7 +29,7 @@ router.post('/Pago', function (req, res) {
           message: 'El codigo de afiliado no existe.'
         })
       } else {
-        let con1 = dataBaseHandler.createConnection()
+        const con1 = dataBaseHandler.createConnection()
         con1.query('CALL sp_obtenerEstadoMembresia(?);', [codigo], function (error2, result2) {
           if (error2) { res.status(404).send('Ocurrio un error durante la consulta2: ' + error2) }
           membresia = result2[0][0].estadoMembresia
@@ -40,7 +40,7 @@ router.post('/Pago', function (req, res) {
               message: 'El Afiliado cuenta con membresía activa.'
             })
           } else {
-            let con2 = dataBaseHandler.createConnection()
+            const con2 = dataBaseHandler.createConnection()
             con2.query('CALL sp_insertarMembresia(?,?,1,null);', [codigo, monto], function (error3, result3) {
               if (error3) { res.status(404).send('Ocurrio un error durante la consulta3: ' + error3) }
               var fechaEnc = new Date(result3[0][0].fecha)
@@ -63,4 +63,3 @@ router.post('/Pago', function (req, res) {
 })
 
 module.exports = router
-

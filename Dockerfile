@@ -1,4 +1,5 @@
 FROM node:10.0.0 
+ENV KEY_JWT="SA@2020"
 COPY Servicio/api api/
 WORKDIR /api
 RUN apt-get update -y

@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const router = Router()
-var DataBaseHandler =  require('../config/conexion')
+var DataBaseHandler = require('../config/conexion')
 var dataBaseHandler = new DataBaseHandler()
 
 router.post('/Afiliado', function (req, res) {
@@ -15,14 +15,14 @@ router.post('/Afiliado', function (req, res) {
       message: 'El password no cumple las características mínimas de seguridad.'
     })
   } else {
-    let con = dataBaseHandler.createConnection()
-    con.query('CALL sp_insertarUsuario(1,null,?,?,null,null,null,null,null);', [password, nombre], function (error, result) {
-      if (error) { res.status(404).send("Ocurrio un error durante la consulta1: " + error)}
+    const con = dataBaseHandler.createConnection()
+    con.query('CALL sp_insertarUsuario(1,?,?,null,null,null,null,null);', [password, nombre], function (error, result) {
+      if (error) { res.status(404).send('Ocurrio un error durante la consulta1: ' + error) }
 
       codigo = result[0][0].cod
-      let con1 = dataBaseHandler.createConnection()
+      const con1 = dataBaseHandler.createConnection()
       con1.query('CALL sp_obtenerEstadoMembresia(?);', [codigo], function (error2, result2) {
-        if (error2) { res.status(404).send("Ocurrio un error durante la consulta2: " + error2)}
+        if (error2) { res.status(404).send('Ocurrio un error durante la consulta2: ' + error2) }
 
         membresia = result2[0][0].estadoMembresia
         membresia = (membresia == 'true')
@@ -41,4 +41,3 @@ router.post('/Afiliado', function (req, res) {
 })
 
 module.exports = router
-
