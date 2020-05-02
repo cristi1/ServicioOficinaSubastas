@@ -3,7 +3,7 @@ const router = Router()
 var DataBaseHandler = require('../config/conexion')
 var dataBaseHandler = new DataBaseHandler()
 
-router.get('/', (req, res) => res.json({ message: 'Hola Cristi desde rol.js nuevamente roles!' }))
+//router.get('/', (req, res) => res.json({ message: 'Hola Cristi desde rol.js nuevamente roles!' }))
 
 router.get('/rol', (req, res) => {
   const connection = dataBaseHandler.createConnection()

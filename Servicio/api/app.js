@@ -31,7 +31,7 @@ app.use(flash())
 app.use(express.static(path.join(__dirname, 'public')))
 
 // routes
-// require('./src/routes/routes')(app, passport)
+ //app.use(require('./src/routes/routes'))
 
 app.use(require('./src/routes/rol'))
 app.use(require('./src/routes/getAfiliado'))

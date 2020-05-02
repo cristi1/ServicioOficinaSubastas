@@ -2,8 +2,8 @@ const { Router } = require('express')
 const router = Router()
 require('dotenv').config()
 var nJwt = require('njwt')
-var DataBaseHandler = require('../config/conexion')
 var validarScope = require('../config/validarScope')
+var DataBaseHandler = require('../config/conexion')
 var dataBaseHandler = new DataBaseHandler()
 
 var signingKey = process.env.KEY_JWT
