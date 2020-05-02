@@ -13,8 +13,9 @@ router.put('/Afiliado', function (req, res) {
   const nombre = req.body.nombre
   const password = req.body.password
   const jwt = req.body.jwt
+  var cod = parseInt(codigo)
 
-  if ((jwt == null && codigo == null) || (password == null && nombre == null) || !Number.isInteger(codigo)) {
+  if ((jwt == null && codigo == null) || (password == null && nombre == null)) {
     res.status(406).send({
       status: 'Not Acceptable',
       message: 'Datos requeridos no ingresados o son incorrectos.'
