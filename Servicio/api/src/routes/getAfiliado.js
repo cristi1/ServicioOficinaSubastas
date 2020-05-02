@@ -16,9 +16,10 @@ router.get('/Afiliado', (req, res) => {
   const password = req.query.password
   let nombre
   let membresia = false
-  
-  var cod = Number(req.query.codigo)
-  codigo = cod
+
+  var cod = parseInt(codigo)
+  console.log("codigo "+cod)
+
   if (jwt == null || codigo == null || password == null) {
     res.status(401).send({
       status: 'Unauthorized',
