@@ -31,17 +31,17 @@ app.use(flash())
 app.use(express.static(path.join(__dirname, 'public')))
 
 // routes
-require('./src/routes/routes')(app, passport)
+// require('./src/routes/routes')(app, passport)
 
-/*app.use(require('./src/routes/rol'))
+app.use(require('./src/routes/rol'))
 app.use(require('./src/routes/getAfiliado'))
 app.use(require('./src/routes/postAfiliado'))
 app.use(require('./src/routes/putAfiliado'))
 app.use(require('./src/routes/getPago'))
-app.use(require('./src/routes/postPago'))*/
+app.use(require('./src/routes/postPago'))
 
 async function main () {
-  app.listen(8081)
+  app.listen(8080)
   console.log('El servidor corre en el puerto 8080')
 }
 
