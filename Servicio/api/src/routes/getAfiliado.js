@@ -12,11 +12,13 @@ router.get('/Afi', (req, res) => res.json({ message: 'Hola Cristi desde afiliado
 
 router.get('/Afiliado', (req, res) => {
   const jwt = req.query.jwt
-  const codigo = req.query.codigo
+  var codigo = req.query.codigo
   const password = req.query.password
   let nombre
   let membresia = false
-
+  
+  var cod = Number(req.query.codigo)
+  codigo = cod
   if (jwt == null || codigo == null || password == null) {
     res.status(401).send({
       status: 'Unauthorized',
